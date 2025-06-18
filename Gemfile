@@ -33,7 +33,19 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
+
+# Simple, Fast, and Declarative Serialization Library for Ruby
+gem "blueprinter"
+
+# gem 'lograge'
+
+gem "kaminari"
+
+# gem 'rack-attack'
+
+# Seamlessly adds a Swagger to Rails-based API's
+gem "rswag"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -42,6 +54,18 @@ group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
 
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "pry"
+  gem "rspec-rails", "~> 8.0.0"
+  gem 'shoulda-matchers' # Simple one-liner tests for common Rails functionality
+
+
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+end
+
+group :development do
+  # Annotate Rails classes with schema and routes info
+  gem "annotate"
 end
