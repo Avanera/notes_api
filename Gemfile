@@ -43,6 +43,8 @@ gem "blueprinter"
 # A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for Ruby webapps
 gem "kaminari"
 
+gem "ruby-openai" # gem for accessing OpenAI API in Ruby
+
 # gem 'rack-attack'
 
 # Seamlessly adds a Swagger to Rails-based API's
