@@ -51,5 +51,7 @@ module NotesApi
 
     # # Rate limiting
     # config.middleware.use Rack::Attack
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end

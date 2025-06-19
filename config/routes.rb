@@ -1,3 +1,9 @@
+if Rails.env.development?
+  require "sidekiq/web"
+  Sidekiq::Web.use ActionDispatch::Cookies
+  Sidekiq::Web.use ActionDispatch::Session::CookieStore, key: "_sidekiq_session"
+end
+
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
@@ -16,4 +22,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  mount Sidekiq::Web => "/sidekiq" if Rails.env.development?
 end

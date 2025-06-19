@@ -35,7 +35,7 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
-gem 'aasm' # State machines for Ruby classes
+gem "aasm" # State machines for Ruby classes
 
 # Simple, Fast, and Declarative Serialization Library for Ruby
 gem "blueprinter"
@@ -51,6 +51,9 @@ gem "ruby-openai" # gem for accessing OpenAI API in Ruby
 
 # Seamlessly adds a Swagger to Rails-based API's
 gem "rswag"
+
+# Simple, efficient background processing for Ruby
+gem "sidekiq"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -77,7 +80,7 @@ end
 
 group :test do
   # Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.
-  gem 'vcr'
+  gem "vcr"
   # Library for stubbing and setting expectations on HTTP requests in Ruby.
-  gem 'webmock'
+  gem "webmock"
 end
