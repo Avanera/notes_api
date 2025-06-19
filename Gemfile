@@ -35,6 +35,8 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
+gem 'aasm' # State machines for Ruby classes
+
 # Simple, Fast, and Declarative Serialization Library for Ruby
 gem "blueprinter"
 
