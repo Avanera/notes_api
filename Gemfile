@@ -59,7 +59,7 @@ group :development, :test do
   gem "faker"
   gem "pry"
   gem "rspec-rails", "~> 8.0.0"
-  gem 'shoulda-matchers' # Simple one-liner tests for common Rails functionality
+  gem "shoulda-matchers" # Simple one-liner tests for common Rails functionality
 
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]

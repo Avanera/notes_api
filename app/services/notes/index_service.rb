@@ -1,6 +1,6 @@
 module Notes
   class IndexService < ApplicationService
-    ARCHIVED_PARAMS = ['true', 'false'].freeze
+    ARCHIVED_PARAMS = [ "true", "false" ].freeze
 
     def call
       params = @context[:params]
@@ -15,7 +15,7 @@ module Notes
       page = params[:page]&.to_i || 1
       per_page = params[:per_page]&.to_i || 20
       per_page = 100 if per_page > 100 # Max limit
-      
+
       @notes = @notes.page(page).per(per_page)
 
 

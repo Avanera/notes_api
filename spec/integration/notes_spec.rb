@@ -12,7 +12,7 @@ RSpec.describe 'Notes API', type: :request do
 
       let(:page) { 1 }
       let(:per_page) { 10 }
-      let(:archived) { false } 
+      let(:archived) { false }
 
       response '200', 'Notes found' do
         schema type: :object,
@@ -34,12 +34,12 @@ RSpec.describe 'Notes API', type: :request do
 
         let!(:notes) { create_list(:note, 3) }
         let!(:archived_note) { create(:note, :archived) }
-        run_test! do 
+        run_test! do
           parsed_response = JSON.parse(response.body, symbolize_names: true)
           expect(parsed_response[:data].count).to eq(3)
           expect(parsed_response[:data].include?(archived_note)).to eq(false)
           expect(parsed_response[:meta]).to eq(
-            {:current_page=>1, :total_pages=>1, :total_count=>3, :per_page=>10}
+            { current_page: 1, total_pages: 1, total_count: 3, per_page: 10 }
             )
         end
       end

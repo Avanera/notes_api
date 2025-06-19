@@ -4,12 +4,12 @@ class ApplicationService
   end
 
   attr_reader :result
-  
+
     def initialize(**context)
       @result = ServiceResult.new
       @context = context
     end
-  
+
   private
 
   class ServiceResult

@@ -48,7 +48,7 @@ RSpec.configure do |config|
               archived: { type: :boolean },
               created_at: { type: :string, format: 'date-time' }
             },
-            required: [:id, :title, :archived]
+            required: [ :id, :title, :archived ]
           },
           Error: {
             type: :object,

@@ -85,7 +85,7 @@ class Api::V1::NotesController < ApplicationController
   # PATCH /api/v1/notes/1/unarchive
   def unarchive
     result = Notes::UnarchiveService.call(note: @note)
-    
+
     if result.success?
       render json: { data: result.data }
     else
