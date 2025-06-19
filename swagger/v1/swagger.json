@@ -1,0 +1,185 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API V1",
+    "version": "v1",
+    "description": "This is the first version of my API"
+  },
+  "paths": {
+    "/api/v1/notes": {
+      "get": {
+        "summary": "Get a list of notes",
+        "tags": [
+          "Notes"
+        ],
+        "parameters": [
+          {
+            "name": "archived",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "notes found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/note"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new note",
+        "tags": [
+          "Notes"
+        ],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Note created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "archived": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "title",
+                  "body"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notes/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Note ID",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get a single note",
+        "tags": [
+          "Notes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Note found"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a note",
+        "tags": [
+          "Notes"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Note updated"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a note",
+        "tags": [
+          "Notes"
+        ],
+        "responses": {
+          "204": {
+            "description": "Note deleted"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "note": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "rewrite_mode": {
+            "type": "integer",
+            "description": "0 = polite, 1 = cheerful, 2 = mysterious"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Notes",
+      "description": "Управление заметками пользователя"
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://{defaultHost}",
+      "variables": {
+        "defaultHost": {
+          "default": "localhost:3000"
+        }
+      }
+    }
+  ]
+}
