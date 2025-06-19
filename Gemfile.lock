@@ -417,6 +417,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
+  dotenv
   factory_bot_rails
   faker
   kamal
