@@ -57,6 +57,20 @@ class Api::V1::NotesController < ApplicationController
     end
   end
 
+  # PATCH /api/v1/notes/1/rewrite
+  def rewrite
+    result = Notes::RewriteService.call(
+      note: @note,
+      rewrite_mode: params[:rewrite_mode]
+    )
+
+    if result.success?
+      render json: { data: result.data }
+    else
+      render json: { errors: result.errors }, status: :unprocessable_entity
+    end
+  end
+
   # PATCH /api/v1/notes/1/archive
   def archive
     result = Notes::ArchiveService.call(note: @note)
