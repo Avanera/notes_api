@@ -1,6 +1,4 @@
 class Api::V1::NotesController < ApplicationController
-  before_action :set_note, only: [ :show, :update, :destroy, :rewrite ]
-
   # GET /api/v1/notes
   def index
     result = Notes::IndexService.call(params: filter_params)
@@ -17,8 +15,10 @@ class Api::V1::NotesController < ApplicationController
 
   # GET /api/v1/notes/1
   def show
+    note = Note.find(params[:id])
+
     render json: {
-      data: NoteBlueprint.render_as_hash(@note, view: :detailed)
+      data: NoteBlueprint.render_as_hash(note, view: :detailed)
     }
   end
 
@@ -35,7 +35,8 @@ class Api::V1::NotesController < ApplicationController
 
   # PATCH /api/v1/notes/1
   def update
-    result = Notes::UpdateService.call(note: @note, params: note_params)
+    note = Note.find(params[:id])
+    result = Notes::UpdateService.call(note:, params: note_params)
 
     if result.success?
       render json: { data: result.data }
@@ -46,7 +47,8 @@ class Api::V1::NotesController < ApplicationController
 
   # DELETE /api/v1/notes/1
   def destroy
-    result = Notes::DestroyService.call(note: @note)
+    note = Note.find(params[:id])
+    result = Notes::DestroyService.call(note:)
 
     if result.success?
       head :no_content
@@ -57,9 +59,10 @@ class Api::V1::NotesController < ApplicationController
 
   # PATCH /api/v1/notes/1/rewrite
   def rewrite
+    note = Note.find(params[:id])
     result = Notes::RewriteService.call(
-      note: @note,
-      rewrite_mode: params[:rewrite_mode]
+      note:,
+      rewrite_mode: params[:rewrite_mode].to_i
     )
 
     if result.success?
@@ -70,10 +73,6 @@ class Api::V1::NotesController < ApplicationController
   end
 
   private
-
-  def set_note
-    @note = Note.find(params[:id])
-  end
 
   def note_params
     params.expect(note: [ :title, :body, :archived ])
