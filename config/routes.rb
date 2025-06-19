@@ -12,8 +12,6 @@ Rails.application.routes.draw do
       resources :notes do
         member do
           patch :rewrite
-          patch :archive
-          patch :unarchive
         end
       end
     end

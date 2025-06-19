@@ -96,20 +96,33 @@ RSpec.describe 'Api::V1::Notes', type: :request do
 
   describe 'PATCH /api/v1/notes/:id' do
     let(:note) { create(:note) }
-    let(:update_params) do
-      {
+
+    it 'updates the note' do
+      update_params = {
         note: {
           title: 'Updated Title'
         }
       }
-    end
 
-    it 'updates the note' do
       patch "/api/v1/notes/#{note.id}", params: update_params
 
       expect(response).to have_http_status(:ok)
       expect_json_response([ :data ])
       expect(json_response['data']['title']).to eq('Updated Title')
+    end
+
+    it 'archives the note' do
+      update_params = {
+        note: {
+          archived: 'true'
+        }
+      }
+
+      patch "/api/v1/notes/#{note.id}", params: update_params
+
+      expect(response).to have_http_status(:ok)
+      expect_json_response([ :data ])
+      expect(json_response['data']['archived']).to be(true)
     end
   end
 
@@ -121,28 +134,6 @@ RSpec.describe 'Api::V1::Notes', type: :request do
       }.to change(Note, :count).by(-1)
 
       expect(response).to have_http_status(:no_content)
-    end
-  end
-
-  describe 'PATCH /api/v1/notes/:id/archive' do
-    let(:note) { create(:note) }
-
-    it 'archives the note' do
-      patch "/api/v1/notes/#{note.id}/archive"
-
-      expect(response).to have_http_status(:ok)
-      expect(json_response['data']['archived']).to be(true)
-    end
-  end
-
-  describe 'PATCH /api/v1/notes/:id/unarchive' do
-    let(:note) { create(:note, :archived) }
-
-    it 'unarchives the note' do
-      patch "/api/v1/notes/#{note.id}/unarchive"
-
-      expect(response).to have_http_status(:ok)
-      expect(json_response['data']['archived']).to be(false)
     end
   end
 

@@ -1,5 +1,5 @@
 class Api::V1::NotesController < ApplicationController
-  before_action :set_note, only: [ :show, :update, :destroy, :rewrite, :archive, :unarchive ]
+  before_action :set_note, only: [ :show, :update, :destroy, :rewrite ]
 
   # GET /api/v1/notes
   def index
@@ -33,14 +33,12 @@ class Api::V1::NotesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /api/v1/notes/1
+  # PATCH /api/v1/notes/1
   def update
     result = Notes::UpdateService.call(note: @note, params: note_params)
 
     if result.success?
-      render json: {
-        data: result.data
-      }
+      render json: { data: result.data }
     else
       render json: { errors: result.errors }, status: :unprocessable_entity
     end
@@ -71,28 +69,6 @@ class Api::V1::NotesController < ApplicationController
     end
   end
 
-  # PATCH /api/v1/notes/1/archive
-  def archive
-    result = Notes::ArchiveService.call(note: @note)
-
-    if result.success?
-      render json: { data: result.data }
-    else
-      render json: { errors: result.errors }, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH /api/v1/notes/1/unarchive
-  def unarchive
-    result = Notes::UnarchiveService.call(note: @note)
-
-    if result.success?
-      render json: { data: result.data }
-    else
-      render json: { errors: result.errors }, status: :unprocessable_entity
-    end
-  end
-
   private
 
   def set_note
@@ -100,7 +76,7 @@ class Api::V1::NotesController < ApplicationController
   end
 
   def note_params
-    params.expect(note: [ :title, :body ])
+    params.expect(note: [ :title, :body, :archived ])
   end
 
   def filter_params

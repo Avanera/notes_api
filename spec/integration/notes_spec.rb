@@ -105,7 +105,7 @@ RSpec.describe 'Notes API', type: :request do
       end
     end
 
-    put 'Updates a note' do
+    patch 'Updates a note' do
       tags 'Notes'
       consumes 'application/json'
       produces 'application/json'
@@ -166,48 +166,6 @@ RSpec.describe 'Notes API', type: :request do
         let(:id) { create(:note).id }
         let(:rewrite_mode) { { rewrite_mode: 'polite' } }
         run_test!
-      end
-    end
-  end
-
-  path '/api/v1/notes/{id}/archive' do
-    parameter name: :id, in: :path, type: :integer
-
-    patch 'Archives a note' do
-      tags 'Notes'
-      produces 'application/json'
-
-      response '200', 'note archived' do
-        schema type: :object,
-          properties: {
-            data: { '$ref' => '#/components/schemas/Note' }
-          }
-
-        let(:id) { create(:note).id }
-        run_test!
-      end
-    end
-  end
-
-  path '/api/v1/notes/{id}/unarchive' do
-    parameter name: :id, in: :path, type: :integer
-
-    patch 'Unarchives a note' do
-      tags 'Notes'
-      produces 'application/json'
-
-      response '200', 'note unarchived' do
-        schema type: :object,
-          properties: {
-            data: { '$ref' => '#/components/schemas/Note' }
-          }
-
-        let(:note) { create(:note, :archived) }
-        let!(:id) { note.id }
-
-        run_test! do
-          expect(note.reload.archived?).to eq(false)
-        end
       end
     end
   end

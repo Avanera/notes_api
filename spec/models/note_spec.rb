@@ -25,20 +25,4 @@ RSpec.describe Note, type: :model do
       end
     end
   end
-
-  describe '#archive!' do
-    let(:note) { create(:note) }
-
-    it 'sets archived to true' do
-      expect { note.archive! }.to change { note.archived }.from(false).to(true)
-    end
-  end
-
-  describe '#unarchive!' do
-    let(:note) { create(:note, :archived) }
-
-    it 'sets archived to false' do
-      expect { note.unarchive! }.to change { note.archived }.from(true).to(false)
-    end
-  end
 end
