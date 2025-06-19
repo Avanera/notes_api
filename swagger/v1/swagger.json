@@ -1,36 +1,77 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "API V1",
+    "title": "Notes API V1",
     "version": "v1",
-    "description": "This is the first version of my API"
+    "description": "API for managing notes with AI text rewriting capabilities"
   },
   "paths": {
     "/api/v1/notes": {
       "get": {
-        "summary": "Get a list of notes",
+        "summary": "Retrieves filtered notes",
         "tags": [
           "Notes"
         ],
         "parameters": [
           {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "description": "Items per page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
             "name": "archived",
             "in": "query",
             "required": false,
+            "description": "Filter by archived status",
             "schema": {
-              "type": "boolean"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "notes found",
+            "description": "Notes found",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/note"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NoteListItem"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "current_page": {
+                          "type": "integer"
+                        },
+                        "total_pages": {
+                          "type": "integer"
+                        },
+                        "total_count": {
+                          "type": "integer"
+                        },
+                        "per_page": {
+                          "type": "integer"
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -39,14 +80,36 @@
         }
       },
       "post": {
-        "summary": "Create a new note",
+        "summary": "Creates a note",
         "tags": [
           "Notes"
         ],
         "parameters": [],
         "responses": {
           "201": {
-            "description": "Note created"
+            "description": "Note created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Note"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -55,20 +118,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "title": {
-                    "type": "string"
-                  },
-                  "body": {
-                    "type": "string"
-                  },
-                  "archived": {
-                    "type": "boolean"
+                  "note": {
+                    "$ref": "#/components/schemas/NoteInput"
                   }
-                },
-                "required": [
-                  "title",
-                  "body"
-                ]
+                }
               }
             }
           }
@@ -80,7 +133,6 @@
         {
           "name": "id",
           "in": "path",
-          "description": "Note ID",
           "required": true,
           "schema": {
             "type": "integer"
@@ -88,25 +140,59 @@
         }
       ],
       "get": {
-        "summary": "Get a single note",
+        "summary": "Retrieves a note",
         "tags": [
           "Notes"
         ],
         "responses": {
           "200": {
-            "description": "Note found"
+            "description": "note found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Note"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "note not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
-      "patch": {
-        "summary": "Update a note",
+      "put": {
+        "summary": "Updates a note",
         "tags": [
           "Notes"
         ],
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Note updated"
+            "description": "note updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Note"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -115,8 +201,8 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "title": {
-                    "type": "string"
+                  "note": {
+                    "$ref": "#/components/schemas/NoteInput"
                   }
                 }
               }
@@ -125,21 +211,152 @@
         }
       },
       "delete": {
-        "summary": "Delete a note",
+        "summary": "Deletes a note",
         "tags": [
           "Notes"
         ],
         "responses": {
           "204": {
-            "description": "Note deleted"
+            "description": "note deleted"
+          }
+        }
+      }
+    },
+    "/api/v1/notes/{id}/rewrite": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Rewrites note content using AI",
+        "tags": [
+          "Notes"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "note rewritten",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Note"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rewrite_mode": {
+                    "type": "string",
+                    "enum": [
+                      "polite",
+                      "cheerful",
+                      "mysterious"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notes/{id}/archive": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Archives a note",
+        "tags": [
+          "Notes"
+        ],
+        "responses": {
+          "200": {
+            "description": "note archived",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Note"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notes/{id}/unarchive": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Unarchives a note",
+        "tags": [
+          "Notes"
+        ],
+        "responses": {
+          "200": {
+            "description": "note unarchived",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Note"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
   "components": {
     "schemas": {
-      "note": {
+      "Note": {
         "type": "object",
         "properties": {
           "id": {
@@ -154,32 +371,82 @@
           "archived": {
             "type": "boolean"
           },
-          "rewrite_mode": {
-            "type": "integer",
-            "description": "0 = polite, 1 = cheerful, 2 = mysterious"
+          "created_at": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "body",
+          "archived"
+        ]
+      },
+      "NoteInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
           }
         },
         "required": [
           "title",
           "body"
         ]
-      }
-    }
-  },
-  "tags": [
-    {
-      "name": "Notes",
-      "description": "Управление заметками пользователя"
-    }
-  ],
-  "servers": [
-    {
-      "url": "https://{defaultHost}",
-      "variables": {
-        "defaultHost": {
-          "default": "localhost:3000"
+      },
+      "NoteListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "archived"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       }
     }
-  ]
+  }
 }
