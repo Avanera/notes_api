@@ -40,6 +40,7 @@ gem "blueprinter"
 
 # gem 'lograge'
 
+# A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for Ruby webapps
 gem "kaminari"
 
 # gem 'rack-attack'
