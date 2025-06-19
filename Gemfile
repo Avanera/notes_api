@@ -72,3 +72,10 @@ group :development do
   # Annotate Rails classes with schema and routes info
   gem "annotate"
 end
+
+group :test do
+  # Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.
+  gem 'vcr'
+  # Library for stubbing and setting expectations on HTTP requests in Ruby.
+  gem 'webmock'
+end
