@@ -65,7 +65,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "pry"
-  gem "rspec-rails", "~> 8.0.0"
+  gem "rspec-rails", "~> 8.0.1"
   gem "shoulda-matchers" # Simple one-liner tests for common Rails functionality
 
 
