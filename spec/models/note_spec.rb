@@ -25,4 +25,37 @@ RSpec.describe Note, type: :model do
       end
     end
   end
+
+  describe 'aasm rewrite_status state machine' do
+    let(:note) { create(:note) }
+
+    it 'has initial state :original' do
+      expect(note).to have_state(:original)
+    end
+
+    describe '#start_rewriting' do
+      it 'transitions from :original to :rewriting' do
+        expect(note).to transition_from(:original).to(:rewriting).on_event(:start_rewriting)
+      end
+
+      it 'transitions from :rewrite_failed to :rewriting' do
+        note.update!(rewrite_status: :rewrite_failed)
+        expect(note).to transition_from(:rewrite_failed).to(:rewriting).on_event(:start_rewriting)
+      end
+    end
+
+    describe '#complete_rewriting' do
+      it 'transitions from :rewriting to :rewritten' do
+        note.update!(rewrite_status: :rewriting)
+        expect(note).to transition_from(:rewriting).to(:rewritten).on_event(:complete_rewriting)
+      end
+    end
+
+    describe '#fail_rewriting' do
+      it 'transitions from :rewriting to :rewrite_failed' do
+        note.update!(rewrite_status: :rewriting)
+        expect(note).to transition_from(:rewriting).to(:rewrite_failed).on_event(:fail_rewriting)
+      end
+    end
+  end
 end
