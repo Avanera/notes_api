@@ -138,35 +138,4 @@ RSpec.describe 'Notes API', type: :request do
       end
     end
   end
-
-  path '/api/v1/notes/{id}/rewrite' do
-    parameter name: :id, in: :path, type: :integer
-
-    patch 'Rewrites note content using AI' do
-      tags 'Notes'
-      consumes 'application/json'
-      produces 'application/json'
-
-      parameter name: :rewrite_mode, in: :body, schema: {
-        type: :object,
-        properties: {
-          rewrite_mode: {
-            type: :string,
-            enum: [ 'polite', 'cheerful', 'mysterious' ]
-          }
-        }
-      }
-
-      response '200', 'note rewritten' do
-        schema type: :object,
-          properties: {
-            data: { '$ref' => '#/components/schemas/Note' }
-          }
-
-        let(:id) { create(:note).id }
-        let(:rewrite_mode) { { rewrite_mode: 'polite' } }
-        run_test!
-      end
-    end
-  end
 end

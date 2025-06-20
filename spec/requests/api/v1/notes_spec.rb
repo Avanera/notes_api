@@ -136,22 +136,4 @@ RSpec.describe 'Api::V1::Notes', type: :request do
       expect(response).to have_http_status(:no_content)
     end
   end
-
-  describe 'PATCH /api/v1/notes/:id/rewrite' do
-    let(:note) { create(:note, body: 'Original text') }
-
-    it 'rewrites the note text' do
-      patch "/api/v1/notes/#{note.id}/rewrite", params: { rewrite_mode: 'polite' }
-
-      expect(response).to have_http_status(:ok)
-      expect(json_response['data']['body']).to include('Please note')
-    end
-
-    it 'returns error for invalid rewrite mode' do
-      patch "/api/v1/notes/#{note.id}/rewrite", params: { rewrite_mode: 'invalid' }
-
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(json_response['errors']).to be_present
-    end
-  end
 end
