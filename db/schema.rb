@@ -10,14 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_18_230119) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_212909) do
   create_table "notes", force: :cascade do |t|
     t.string "title", null: false
     t.text "body", null: false
     t.boolean "archived", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "rewrite_mode", default: 0
+    t.string "rewrite_status", default: "original"
+    t.text "rewrite_error"
     t.index ["archived"], name: "index_notes_on_archived"
     t.index ["created_at"], name: "index_notes_on_created_at"
   end
